@@ -8,13 +8,17 @@ export default class ReactDDDjs extends Component {
     render() {
 
         if(this.props.nodes.status === "available" && this.props.links.status === "available"){
-            console.log("render")
+            console.log(this)
             return <Network
             nodes={this.props.nodes}
+            nodeID={this.props.nodeID}
             nodeName={this.props.nodeName}
             links={this.props.links}
-            linkSource={this.props.linkSource}
-            linkTarget={this.props.linkTarget}
+            linkSourceID={this.props.linkSourceID}
+            linkTargetID={this.props.linkTargetID}
+            networkWidth={this.props.networkWidth}
+            networkHeight={this.props.networkHeight}
+            widgetName={this.props.name}
             />;
         }
         else{
