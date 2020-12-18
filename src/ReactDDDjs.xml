@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget id="mendix.reactdddjs.ReactDDDjs" pluginWidget="true" needsEntityContext="true" offlineCapable="true"
+        supportedPlatform="Web"
+        xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
+    <name>React DDDjs</name>
+    <description>My widget description</description>
+    <icon/>
+    <properties>
+        <propertyGroup caption="General">
+
+            <property key="nodes" type="datasource" isList="true" required="false">
+	            <caption>Nodes</caption>
+	            <description />
+            </property>
+            <property key="nodeName" type="attribute" required="false" dataSource="nodes">
+                <caption>Node name</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
+
+
+            <property key="links" type="datasource" isList="true" required="false">
+	            <caption>Link</caption>
+	            <description />
+            </property>
+            <property key="linkSource" type="attribute" required="false" dataSource="links">
+                <caption>Link source</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
+            <property key="linkTarget" type="attribute" required="false" dataSource="links">
+                <caption>Link target</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
+
+        </propertyGroup>
+    </properties>
+</widget>
