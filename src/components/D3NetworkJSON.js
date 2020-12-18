@@ -4,7 +4,6 @@ import * as d3 from "d3";
 function Network(props) {
   const [nodesState, setnodesState] = useState(setNodesState(props.nodes.items));
   const [linksState, setlinksState] = useState(setLinksState(props.links.items, props.nodes.items));
-  console.log(props);
   const svgRef = useRef();
 
   function setNodesState (nodesdata){
@@ -37,7 +36,7 @@ function Network(props) {
     const svg = d3.select(svgRef.current);
     
     var width = 100
-    var height = 80
+    var height = 100
 
     svg.attr("viewBox", [-width * 0.5, -height * 0.5, 2* width, 2* height]);
 
@@ -146,7 +145,7 @@ function Network(props) {
 
   return (
     <React.Fragment>
-      <svg height="400" width="500" ref={svgRef}>
+      <svg height={props.networkHeight} width={props.networkWidth} ref={svgRef}>
       </svg>
     </React.Fragment>
   );
