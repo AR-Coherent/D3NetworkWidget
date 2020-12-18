@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget id="mendix.reactdddjs.ReactDDDjs" pluginWidget="true" needsEntityContext="false" offlineCapable="true"
+        supportedPlatform="Web"
+        xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../node_modules/mendix/custom_widget.xsd">
+    <name>D3 Network graph</name>
+    <description>My widget description</description>
+    <icon/>
+    <properties>
+        <propertyGroup caption="Data">
+            <property key="nodes" type="datasource" isList="true" required="false">
+	            <caption>Nodes</caption>
+	            <description />
+            </property>
+            <property key="nodeID" type="attribute" required="false" dataSource="nodes">
+                <caption>Node ID</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
+            <property key="nodeName" type="attribute" required="false" dataSource="nodes">
+                <caption>Node name</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
+            <property key="links" type="datasource" isList="true" required="false">
+	            <caption>Link</caption>
+	            <description />
+            </property>
+            <property key="linkSourceID" type="attribute" required="false" dataSource="links">
+                <caption>Link source ID</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
+            <property key="linkTargetID" type="attribute" required="false" dataSource="links">
+                <caption>Link target ID</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
+        </propertyGroup>
+        <propertyGroup caption="Settings">
+         <property key="networkWidth" type="string" defaultValue="400">
+            <caption>Network width</caption>
+            <description></description>
+        </property>
+        <property key="networkHeight" type="string" defaultValue="500">
+            <caption>Network height</caption>
+            <description></description>
+        </property>
+        </propertyGroup>
+    </properties>
+</widget>
