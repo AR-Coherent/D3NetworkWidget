@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "a46a2bc89d1aacd74411";
+/******/ 	var hotCurrentHash = "48ab03987a1b06d9c2ad";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -32576,32 +32576,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 
 
 
 function Network(props) {
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(setNodesState(props.nodes.items)),
-      _useState2 = _slicedToArray(_useState, 2),
-      nodesState = _useState2[0],
-      setnodesState = _useState2[1];
-
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(setLinksState(props.links.items, props.nodes.items)),
-      _useState4 = _slicedToArray(_useState3, 2),
-      linksState = _useState4[0],
-      setlinksState = _useState4[1];
-
   var svgRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
 
   function setNodesState(nodesdata) {
@@ -32616,12 +32594,12 @@ function Network(props) {
     return nodes;
   }
 
-  function setLinksState(linksdata) {
+  function setLinksState(linksdata, nodesList) {
     var links = [];
     linksdata.forEach(function (link) {
-      if (nodesState.some(function (node) {
+      if (nodesList.some(function (node) {
         return node.ID === props.linkSourceID(link).value;
-      }) && nodesState.some(function (node) {
+      }) && nodesList.some(function (node) {
         return node.ID === props.linkTargetID(link).value;
       })) {
         var linkObj = {
@@ -32635,19 +32613,27 @@ function Network(props) {
   }
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    var nodesList = setNodesState(props.nodes.items);
+    var linksList = setLinksState(props.links.items, nodesList);
+    var elem = document.querySelector(".".concat(props.widgetName, "-network"));
+
+    if (elem != null) {
+      elem.parentNode.removeChild(elem);
+    }
+
     var svg = d3__WEBPACK_IMPORTED_MODULE_1__["select"](svgRef.current);
     var width = 100;
     var height = 100;
     svg.attr("viewBox", [-width * 0.5, -height * 0.5, 2 * width, 2 * height]);
     var g = svg.attr("class", "".concat(props.widgetName, "-networksvg")).append("g").attr("class", "".concat(props.widgetName, "-network")).attr("cursor", "grab");
     svg.call(d3__WEBPACK_IMPORTED_MODULE_1__["zoom"]().extent([[-width, -height], [2 * width, 2 * height]]).scaleExtent([0.25, 4]).on("zoom", zoomed));
-    var link_force = d3__WEBPACK_IMPORTED_MODULE_1__["forceLink"](linksState).id(function (d) {
+    var link_force = d3__WEBPACK_IMPORTED_MODULE_1__["forceLink"](linksList).id(function (d) {
       return d.ID;
     });
-    var simulation = d3__WEBPACK_IMPORTED_MODULE_1__["forceSimulation"](nodesState).force('charge', d3__WEBPACK_IMPORTED_MODULE_1__["forceCollide"](25).strength(0.3)).force('centerX', d3__WEBPACK_IMPORTED_MODULE_1__["forceX"](width / 2)).force('centerY', d3__WEBPACK_IMPORTED_MODULE_1__["forceY"](height / 2)).force("links", link_force).on('tick', ticked).alphaMin(0.1);
-    var linkContainer = g.append("g").attr("class", "".concat(props.widgetName, "-links")).selectAll('line').data(linksState).enter().append('line').attr('class', "".concat(props.widgetName, "-link")).attr('stroke', '#aaa').attr('stroke-width', 2).attr('pointer-events', "none");
-    var nodeContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodes")).selectAll('circle').data(nodesState).enter().append('circle').attr("class", "".concat(props.widgetName, "-node")).attr('r', 5).call(d3__WEBPACK_IMPORTED_MODULE_1__["drag"]().on("start", dragStarted).on("drag", dragged).on("end", dragEnded));
-    var nodeLabelContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodeLabels")).selectAll('text').data(nodesState).enter().append('text').attr('class', 'network-label').text(function (d) {
+    var simulation = d3__WEBPACK_IMPORTED_MODULE_1__["forceSimulation"](nodesList).force('charge', d3__WEBPACK_IMPORTED_MODULE_1__["forceCollide"](25).strength(0.3)).force('centerX', d3__WEBPACK_IMPORTED_MODULE_1__["forceX"](width / 2)).force('centerY', d3__WEBPACK_IMPORTED_MODULE_1__["forceY"](height / 2)).force("links", link_force).on('tick', ticked).alphaMin(0.1);
+    var linkContainer = g.append("g").attr("class", "".concat(props.widgetName, "-links")).selectAll('line').data(linksList).enter().append('line').attr('class', "".concat(props.widgetName, "-link")).attr('stroke', '#aaa').attr('stroke-width', 2).attr('pointer-events', "none");
+    var nodeContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodes")).selectAll('circle').data(nodesList).enter().append('circle').attr("class", "".concat(props.widgetName, "-node")).attr('r', 5).call(d3__WEBPACK_IMPORTED_MODULE_1__["drag"]().on("start", dragStarted).on("drag", dragged).on("end", dragEnded));
+    var nodeLabelContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodeLabels")).selectAll('text').data(nodesList).enter().append('text').attr('class', 'network-label').text(function (d) {
       return d.name;
     }).attr("text-anchor", "middle").attr("dx", 0).attr("dy", 12).attr("font-size", 6).attr('pointer-events', "none");
 

@@ -6,7 +6,6 @@ import "./ui/ReactDDDjs.css";
 export default class ReactDDDjs extends Component {
     render() {
         if(this.props.nodes.status === "available" && this.props.links.status === "available"){
-
             return <Network
                         nodes={this.props.nodes}
                         nodeID={this.props.nodeID}

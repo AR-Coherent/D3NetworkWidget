@@ -2,8 +2,6 @@ import React, { useRef, useEffect, useState, createElement } from "react";
 import * as d3 from "d3";
 
 function Network(props) {
-  const [nodesState, setnodesState] = useState(setNodesState(props.nodes.items));
-  const [linksState, setlinksState] = useState(setLinksState(props.links.items, props.nodes.items));
   const svgRef = useRef();
 
   function setNodesState (nodesdata){
@@ -17,24 +15,32 @@ function Network(props) {
     })
     return nodes;
   }
-  function setLinksState (linksdata){
+
+  function setLinksState (linksdata, nodesList){
     let links = [];
     linksdata.forEach(link => {
-      if(nodesState.some(node => node.ID === props.linkSourceID(link).value) && 
-         nodesState.some(node => node.ID === props.linkTargetID(link).value)){
+      if(nodesList.some(node => node.ID === props.linkSourceID(link).value) && 
+      nodesList.some(node => node.ID === props.linkTargetID(link).value)){
           let linkObj = {
             "source": props.linkSourceID(link).value,
             "target": props.linkTargetID(link).value
-          }
+           }
           links.push(linkObj)
-          }
+      }
     })
     return links;
   }
 
   useEffect(() => {
-    const svg = d3.select(svgRef.current);
+    let nodesList = setNodesState(props.nodes.items);
+    let linksList = setLinksState(props.links.items, nodesList);
     
+    var elem = document.querySelector(`.${props.widgetName}-network`)
+    if(elem != null){
+      elem.parentNode.removeChild(elem);
+    }
+    const svg = d3.select(svgRef.current);
+     
     var width = 100
     var height = 100
 
@@ -51,22 +57,22 @@ function Network(props) {
     .scaleExtent([0.25, 4])
     .on("zoom", zoomed));
 
-    var link_force =  d3.forceLink(linksState)
-    .id(function(d) { return d.ID; })
+    var link_force =  d3.forceLink(linksList)
+    .id(function(d) { return d.ID; });
 
-    var simulation = d3.forceSimulation(nodesState)
+    var simulation = d3.forceSimulation(nodesList)
     .force('charge', d3.forceCollide(25).strength(0.3))
     .force('centerX', d3.forceX(width / 2))
     .force('centerY', d3.forceY(height / 2))
     .force("links",link_force)
     .on('tick', ticked)
-    .alphaMin(0.1)
-    ;
+    .alphaMin(0.1);
+
     var linkContainer = g
     .append("g")
     .attr("class", `${props.widgetName}-links`)
     .selectAll('line')
-    .data(linksState)
+    .data(linksList)
     .enter()
     .append('line')
     .attr('class', `${props.widgetName}-link`)
@@ -78,7 +84,7 @@ function Network(props) {
     .append("g")
     .attr("class", `${props.widgetName}-nodes`)
     .selectAll('circle')
-    .data(nodesState)
+    .data(nodesList)
     .enter()
     .append('circle')
     .attr("class", `${props.widgetName}-node`)
@@ -94,7 +100,7 @@ function Network(props) {
     .append("g")
     .attr("class", `${props.widgetName}-nodeLabels`)
     .selectAll('text')
-    .data(nodesState)
+    .data(nodesList)
     .enter()
     .append('text')
     .attr('class', 'network-label')
@@ -108,7 +114,6 @@ function Network(props) {
     function zoomed({transform}) {
       g.attr("transform", transform);
     }
-
     function dragStarted (event, d){
       if (!event.active) {
         simulation.alphaTarget(0.3).restart();
