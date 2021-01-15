@@ -118,6 +118,12 @@ function Network(props) {
       if (!event.active) {
         simulation.alphaTarget(0.3).restart();
       }
+      if(props.nodeClick){
+        const clickAction = props.nodeClick(props.nodes.items[d.index]);
+        if(clickAction.canExecute){
+          clickAction.execute();
+        }
+      }
     }
     function dragged (event, d){
       d.fx = event.x;

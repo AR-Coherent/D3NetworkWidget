@@ -26,6 +26,10 @@
                     <attributeType name="String"/>
                 </attributeTypes>
             </property>
+            <property key="nodeClick" type="action" dataSource="nodes">
+                <caption>On node click</caption>
+                <description>Action to be performed when node is clicked</description>
+            </property>
             <property key="links" type="datasource" isList="true" required="false">
 	            <caption>Link</caption>
 	            <description />
