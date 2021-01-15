@@ -4,42 +4,9 @@ import * as d3 from "d3";
 function Network(props) {
   const svgRef = useRef();
 
-  function setNodesState (nodesdata){
-    let nodes = [];
-    nodesdata.forEach(node => {
-      let nodeObj = {
-        "ID": props.nodeID(node).value,
-        "name": props.nodeName(node).value,
-        "size": props.nodeSize(node).displayValue
-      }
-      nodes.push(nodeObj);
-    })
-    return nodes;
-  }
-
-  function setLinksState (linksdata, nodesList){
-    let links = [];
-    linksdata.forEach(link => {
-      if(nodesList.some(node => node.ID === props.linkSourceID(link).value) && 
-      nodesList.some(node => node.ID === props.linkTargetID(link).value)){
-        let sizeSource = nodesList.filter(node => { return node.ID === props.linkSourceID(link).value})[0].size;
-        let sizeTarget = nodesList.filter(node => { return node.ID === props.linkTargetID(link).value})[0].size;
-        let linkObj = {
-            "source": props.linkSourceID(link).value,
-            "target": props.linkTargetID(link).value,
-            "thickness": props.linkThickness(link).value,
-            "biggestNode": Math.max(sizeSource, sizeTarget)
-           }
-          links.push(linkObj)
-      }
-    })
-    return links;
-  }
-
   useEffect(() => {
     let nodesList = setNodesState(props.nodes.items);
     let linksList = setLinksState(props.links.items, nodesList);
-    console.log(linksList)
     var elem = document.querySelector(`.${props.widgetName}-network`)
     if(elem != null){
       elem.parentNode.removeChild(elem);
@@ -64,10 +31,7 @@ function Network(props) {
 
     var link_force =  d3.forceLink(linksList)
     .id(d => d.ID )
-    .distance(d =>{
-      console.log(d.biggestNode)
-      return d.biggestNode + 50;
-    });
+    .distance(d => d.biggestNode + 50);
 
     var simulation = d3.forceSimulation(nodesList)
     .force('charge', d3.forceCollide( d => parseInt(d.size) + 25).strength(0.3))
@@ -162,6 +126,53 @@ function Network(props) {
     }
 
   }, [props.nodes, props.links]);
+
+  function setNodesState (nodesdata){
+    let nodes = [];
+    nodesdata.forEach(node => {
+      let nodeObj = {}
+      nodeObj.ID = props.nodeID(node).value;
+      nodeObj.name = props.nodeName(node).value;
+      nodeObj.size = getNodeSize(node);
+      nodes.push(nodeObj);
+    })
+    return nodes;
+  }
+
+  function setLinksState (linksdata, nodesList){
+    let links = [];
+    linksdata.forEach(link => {
+      if(nodesList.some(node => node.ID === props.linkSourceID(link).value) && 
+      nodesList.some(node => node.ID === props.linkTargetID(link).value)){
+        let sizeSource = nodesList.filter(node => { return node.ID === props.linkSourceID(link).value})[0].size;
+        let sizeTarget = nodesList.filter(node => { return node.ID === props.linkTargetID(link).value})[0].size;
+        let linkObj = {
+            "source": props.linkSourceID(link).value,
+            "target": props.linkTargetID(link).value,
+            "thickness": getLinkThickness(link),
+            "biggestNode": Math.max(sizeSource, sizeTarget)
+           }
+          links.push(linkObj)
+      }
+    })
+    return links;
+  }
+
+  function getNodeSize(node){
+    if (props.nodeSize && props.nodeSize(node).displayValue){
+      return props.nodeSize(node).displayValue;
+    }else{
+      return 5;
+    }
+  }
+
+  function getLinkThickness(link){
+    if (props.linkThickness && props.linkThickness(link).value){
+      return props.linkThickness(link).value
+    }else{
+      return 2;
+    }
+  }
 
   return (
     <React.Fragment>

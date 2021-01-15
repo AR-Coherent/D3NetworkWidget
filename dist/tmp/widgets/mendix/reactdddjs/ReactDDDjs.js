@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "f0395cec44c35b4693d0";
+/******/ 	var hotCurrentHash = "f438eaa459ecd3246447";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -32584,50 +32584,9 @@ __webpack_require__.r(__webpack_exports__);
 
 function Network(props) {
   var svgRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
-
-  function setNodesState(nodesdata) {
-    var nodes = [];
-    nodesdata.forEach(function (node) {
-      var nodeObj = {
-        "ID": props.nodeID(node).value,
-        "name": props.nodeName(node).value,
-        "size": props.nodeSize(node).displayValue
-      };
-      nodes.push(nodeObj);
-    });
-    return nodes;
-  }
-
-  function setLinksState(linksdata, nodesList) {
-    var links = [];
-    linksdata.forEach(function (link) {
-      if (nodesList.some(function (node) {
-        return node.ID === props.linkSourceID(link).value;
-      }) && nodesList.some(function (node) {
-        return node.ID === props.linkTargetID(link).value;
-      })) {
-        var sizeSource = nodesList.filter(function (node) {
-          return node.ID === props.linkSourceID(link).value;
-        })[0].size;
-        var sizeTarget = nodesList.filter(function (node) {
-          return node.ID === props.linkTargetID(link).value;
-        })[0].size;
-        var linkObj = {
-          "source": props.linkSourceID(link).value,
-          "target": props.linkTargetID(link).value,
-          "thickness": props.linkThickness(link).value,
-          "biggestNode": Math.max(sizeSource, sizeTarget)
-        };
-        links.push(linkObj);
-      }
-    });
-    return links;
-  }
-
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var nodesList = setNodesState(props.nodes.items);
     var linksList = setLinksState(props.links.items, nodesList);
-    console.log(linksList);
     var elem = document.querySelector(".".concat(props.widgetName, "-network"));
 
     if (elem != null) {
@@ -32643,7 +32602,6 @@ function Network(props) {
     var link_force = d3__WEBPACK_IMPORTED_MODULE_1__["forceLink"](linksList).id(function (d) {
       return d.ID;
     }).distance(function (d) {
-      console.log(d.biggestNode);
       return d.biggestNode + 50;
     });
     var simulation = d3__WEBPACK_IMPORTED_MODULE_1__["forceSimulation"](nodesList).force('charge', d3__WEBPACK_IMPORTED_MODULE_1__["forceCollide"](function (d) {
@@ -32715,6 +32673,61 @@ function Network(props) {
       });
     }
   }, [props.nodes, props.links]);
+
+  function setNodesState(nodesdata) {
+    var nodes = [];
+    nodesdata.forEach(function (node) {
+      var nodeObj = {};
+      nodeObj.ID = props.nodeID(node).value;
+      nodeObj.name = props.nodeName(node).value;
+      nodeObj.size = getNodeSize(node);
+      nodes.push(nodeObj);
+    });
+    return nodes;
+  }
+
+  function setLinksState(linksdata, nodesList) {
+    var links = [];
+    linksdata.forEach(function (link) {
+      if (nodesList.some(function (node) {
+        return node.ID === props.linkSourceID(link).value;
+      }) && nodesList.some(function (node) {
+        return node.ID === props.linkTargetID(link).value;
+      })) {
+        var sizeSource = nodesList.filter(function (node) {
+          return node.ID === props.linkSourceID(link).value;
+        })[0].size;
+        var sizeTarget = nodesList.filter(function (node) {
+          return node.ID === props.linkTargetID(link).value;
+        })[0].size;
+        var linkObj = {
+          "source": props.linkSourceID(link).value,
+          "target": props.linkTargetID(link).value,
+          "thickness": getLinkThickness(link),
+          "biggestNode": Math.max(sizeSource, sizeTarget)
+        };
+        links.push(linkObj);
+      }
+    });
+    return links;
+  }
+
+  function getNodeSize(node) {
+    if (props.nodeSize && props.nodeSize(node).displayValue) {
+      return props.nodeSize(node).displayValue;
+    } else {
+      return 5;
+    }
+  }
+
+  function getLinkThickness(link) {
+    if (props.linkThickness && props.linkThickness(link).value) {
+      return props.linkThickness(link).value;
+    } else {
+      return 2;
+    }
+  }
+
   return /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["createElement"])("svg", {
     height: props.networkHeight,
     width: props.networkWidth,

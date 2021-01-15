@@ -28,7 +28,7 @@
             </property>
             <property key="nodeSize" type="attribute" required="false" dataSource="nodes">
                 <caption>Node size</caption>
-                <description></description>
+                <description>Default value: 5</description>
                 <attributeTypes>
                     <attributeType name="Integer"/>
                 </attributeTypes>
@@ -57,7 +57,7 @@
             </property>
             <property key="linkThickness" type="attribute" required="false" dataSource="links">
                 <caption>Link thickness</caption>
-                <description></description>
+                <description>Default value: 2</description>
                 <attributeTypes>
                     <attributeType name="Integer"/>
                 </attributeTypes>
