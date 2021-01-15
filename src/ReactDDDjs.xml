@@ -26,6 +26,13 @@
                     <attributeType name="String"/>
                 </attributeTypes>
             </property>
+            <property key="nodeSize" type="attribute" required="false" dataSource="nodes">
+                <caption>Node size</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="Integer"/>
+                </attributeTypes>
+            </property>
             <property key="nodeClick" type="action" dataSource="nodes">
                 <caption>On node click</caption>
                 <description>Action to be performed when node is clicked</description>
@@ -48,16 +55,23 @@
                     <attributeType name="String"/>
                 </attributeTypes>
             </property>
+            <property key="linkThickness" type="attribute" required="false" dataSource="links">
+                <caption>Link thickness</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="Integer"/>
+                </attributeTypes>
+            </property>
         </propertyGroup>
         <propertyGroup caption="Settings">
-         <property key="networkWidth" type="string" defaultValue="400">
-            <caption>Network width</caption>
-            <description></description>
-        </property>
-        <property key="networkHeight" type="string" defaultValue="500">
-            <caption>Network height</caption>
-            <description></description>
-        </property>
+            <property key="networkWidth" type="string" defaultValue="400">
+                <caption>Network width</caption>
+                <description></description>
+            </property>
+            <property key="networkHeight" type="string" defaultValue="500">
+                <caption>Network height</caption>
+                <description></description>
+            </property>
         </propertyGroup>
     </properties>
 </widget>

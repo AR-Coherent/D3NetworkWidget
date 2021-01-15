@@ -10,10 +10,12 @@ export default class ReactDDDjs extends Component {
                         nodes={this.props.nodes}
                         nodeID={this.props.nodeID}
                         nodeName={this.props.nodeName}
+                        nodeSize={this.props.nodeSize}
                         nodeClick={this.props.nodeClick}
                         links={this.props.links}
                         linkSourceID={this.props.linkSourceID}
                         linkTargetID={this.props.linkTargetID}
+                        linkThickness={this.props.linkThickness}
                         networkWidth={this.props.networkWidth}
                         networkHeight={this.props.networkHeight}
                         widgetName={this.props.name}

@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "48ab03987a1b06d9c2ad";
+/******/ 	var hotCurrentHash = "f0395cec44c35b4693d0";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -32544,9 +32544,12 @@ var ReactDDDjs = /*#__PURE__*/function (_Component) {
           nodes: this.props.nodes,
           nodeID: this.props.nodeID,
           nodeName: this.props.nodeName,
+          nodeSize: this.props.nodeSize,
+          nodeClick: this.props.nodeClick,
           links: this.props.links,
           linkSourceID: this.props.linkSourceID,
           linkTargetID: this.props.linkTargetID,
+          linkThickness: this.props.linkThickness,
           networkWidth: this.props.networkWidth,
           networkHeight: this.props.networkHeight,
           widgetName: this.props.name
@@ -32587,7 +32590,8 @@ function Network(props) {
     nodesdata.forEach(function (node) {
       var nodeObj = {
         "ID": props.nodeID(node).value,
-        "name": props.nodeName(node).value
+        "name": props.nodeName(node).value,
+        "size": props.nodeSize(node).displayValue
       };
       nodes.push(nodeObj);
     });
@@ -32602,9 +32606,17 @@ function Network(props) {
       }) && nodesList.some(function (node) {
         return node.ID === props.linkTargetID(link).value;
       })) {
+        var sizeSource = nodesList.filter(function (node) {
+          return node.ID === props.linkSourceID(link).value;
+        })[0].size;
+        var sizeTarget = nodesList.filter(function (node) {
+          return node.ID === props.linkTargetID(link).value;
+        })[0].size;
         var linkObj = {
           "source": props.linkSourceID(link).value,
-          "target": props.linkTargetID(link).value
+          "target": props.linkTargetID(link).value,
+          "thickness": props.linkThickness(link).value,
+          "biggestNode": Math.max(sizeSource, sizeTarget)
         };
         links.push(linkObj);
       }
@@ -32615,6 +32627,7 @@ function Network(props) {
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     var nodesList = setNodesState(props.nodes.items);
     var linksList = setLinksState(props.links.items, nodesList);
+    console.log(linksList);
     var elem = document.querySelector(".".concat(props.widgetName, "-network"));
 
     if (elem != null) {
@@ -32629,13 +32642,24 @@ function Network(props) {
     svg.call(d3__WEBPACK_IMPORTED_MODULE_1__["zoom"]().extent([[-width, -height], [2 * width, 2 * height]]).scaleExtent([0.25, 4]).on("zoom", zoomed));
     var link_force = d3__WEBPACK_IMPORTED_MODULE_1__["forceLink"](linksList).id(function (d) {
       return d.ID;
+    }).distance(function (d) {
+      console.log(d.biggestNode);
+      return d.biggestNode + 50;
     });
-    var simulation = d3__WEBPACK_IMPORTED_MODULE_1__["forceSimulation"](nodesList).force('charge', d3__WEBPACK_IMPORTED_MODULE_1__["forceCollide"](25).strength(0.3)).force('centerX', d3__WEBPACK_IMPORTED_MODULE_1__["forceX"](width / 2)).force('centerY', d3__WEBPACK_IMPORTED_MODULE_1__["forceY"](height / 2)).force("links", link_force).on('tick', ticked).alphaMin(0.1);
-    var linkContainer = g.append("g").attr("class", "".concat(props.widgetName, "-links")).selectAll('line').data(linksList).enter().append('line').attr('class', "".concat(props.widgetName, "-link")).attr('stroke', '#aaa').attr('stroke-width', 2).attr('pointer-events', "none");
-    var nodeContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodes")).selectAll('circle').data(nodesList).enter().append('circle').attr("class", "".concat(props.widgetName, "-node")).attr('r', 5).call(d3__WEBPACK_IMPORTED_MODULE_1__["drag"]().on("start", dragStarted).on("drag", dragged).on("end", dragEnded));
+    var simulation = d3__WEBPACK_IMPORTED_MODULE_1__["forceSimulation"](nodesList).force('charge', d3__WEBPACK_IMPORTED_MODULE_1__["forceCollide"](function (d) {
+      return parseInt(d.size) + 25;
+    }).strength(0.3)).force('centerX', d3__WEBPACK_IMPORTED_MODULE_1__["forceX"](width / 2)).force('centerY', d3__WEBPACK_IMPORTED_MODULE_1__["forceY"](height / 2)).force("links", link_force).on('tick', ticked).alphaMin(0.1);
+    var linkContainer = g.append("g").attr("class", "".concat(props.widgetName, "-links")).selectAll('line').data(linksList).enter().append('line').attr('class', "".concat(props.widgetName, "-link")).attr('stroke', '#aaa').attr('stroke-width', function (d) {
+      return d.thickness;
+    }).attr('pointer-events', "none");
+    var nodeContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodes")).selectAll('circle').data(nodesList).enter().append('circle').attr("class", "".concat(props.widgetName, "-node")).attr('r', function (d) {
+      return d.size;
+    }).call(d3__WEBPACK_IMPORTED_MODULE_1__["drag"]().on("start", dragStarted).on("drag", dragged).on("end", dragEnded));
     var nodeLabelContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodeLabels")).selectAll('text').data(nodesList).enter().append('text').attr('class', 'network-label').text(function (d) {
       return d.name;
-    }).attr("text-anchor", "middle").attr("dx", 0).attr("dy", 12).attr("font-size", 6).attr('pointer-events', "none");
+    }).attr("text-anchor", "middle").attr("dx", 0).attr("dy", function (d) {
+      return parseInt(d.size) + parseInt(7);
+    }).attr("font-size", 6).attr('pointer-events', "none");
 
     function zoomed(_ref) {
       var transform = _ref.transform;
@@ -32645,6 +32669,14 @@ function Network(props) {
     function dragStarted(event, d) {
       if (!event.active) {
         simulation.alphaTarget(0.3).restart();
+      }
+
+      if (props.nodeClick) {
+        var clickAction = props.nodeClick(props.nodes.items[d.index]);
+
+        if (clickAction.canExecute) {
+          clickAction.execute();
+        }
       }
     }
 

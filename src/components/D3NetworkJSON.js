@@ -9,7 +9,8 @@ function Network(props) {
     nodesdata.forEach(node => {
       let nodeObj = {
         "ID": props.nodeID(node).value,
-        "name": props.nodeName(node).value
+        "name": props.nodeName(node).value,
+        "size": props.nodeSize(node).displayValue
       }
       nodes.push(nodeObj);
     })
@@ -21,9 +22,13 @@ function Network(props) {
     linksdata.forEach(link => {
       if(nodesList.some(node => node.ID === props.linkSourceID(link).value) && 
       nodesList.some(node => node.ID === props.linkTargetID(link).value)){
-          let linkObj = {
+        let sizeSource = nodesList.filter(node => { return node.ID === props.linkSourceID(link).value})[0].size;
+        let sizeTarget = nodesList.filter(node => { return node.ID === props.linkTargetID(link).value})[0].size;
+        let linkObj = {
             "source": props.linkSourceID(link).value,
-            "target": props.linkTargetID(link).value
+            "target": props.linkTargetID(link).value,
+            "thickness": props.linkThickness(link).value,
+            "biggestNode": Math.max(sizeSource, sizeTarget)
            }
           links.push(linkObj)
       }
@@ -34,7 +39,7 @@ function Network(props) {
   useEffect(() => {
     let nodesList = setNodesState(props.nodes.items);
     let linksList = setLinksState(props.links.items, nodesList);
-    
+    console.log(linksList)
     var elem = document.querySelector(`.${props.widgetName}-network`)
     if(elem != null){
       elem.parentNode.removeChild(elem);
@@ -58,10 +63,14 @@ function Network(props) {
     .on("zoom", zoomed));
 
     var link_force =  d3.forceLink(linksList)
-    .id(function(d) { return d.ID; });
+    .id(d => d.ID )
+    .distance(d =>{
+      console.log(d.biggestNode)
+      return d.biggestNode + 50;
+    });
 
     var simulation = d3.forceSimulation(nodesList)
-    .force('charge', d3.forceCollide(25).strength(0.3))
+    .force('charge', d3.forceCollide( d => parseInt(d.size) + 25).strength(0.3))
     .force('centerX', d3.forceX(width / 2))
     .force('centerY', d3.forceY(height / 2))
     .force("links",link_force)
@@ -77,7 +86,7 @@ function Network(props) {
     .append('line')
     .attr('class', `${props.widgetName}-link`)
     .attr('stroke', '#aaa')
-    .attr('stroke-width', 2)
+    .attr('stroke-width', d => d.thickness)
     .attr('pointer-events', "none");
 
     var nodeContainer = g
@@ -88,7 +97,7 @@ function Network(props) {
     .enter()
     .append('circle')
     .attr("class", `${props.widgetName}-node`)
-    .attr('r', 5)
+    .attr('r', d => d.size)
     .call(
       d3.drag()
       .on("start", dragStarted)
@@ -107,7 +116,7 @@ function Network(props) {
     .text(d => d.name)
     .attr("text-anchor", "middle")
     .attr("dx", 0)
-    .attr("dy", 12)
+    .attr("dy", d => parseInt(d.size) + parseInt(7))
     .attr("font-size", 6)
     .attr('pointer-events', "none");
 
