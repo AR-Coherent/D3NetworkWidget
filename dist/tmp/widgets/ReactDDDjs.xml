@@ -26,11 +26,39 @@
                     <attributeType name="String"/>
                 </attributeTypes>
             </property>
-            <property key="nodeSize" type="attribute" required="false" dataSource="nodes">
-                <caption>Node size</caption>
-                <description>Default value: 5</description>
+            <property key="nodeRepulsion" type="attribute" required="false" dataSource="nodes">
+                <caption>Node repulsion</caption>
+                <description></description>
                 <attributeTypes>
                     <attributeType name="Integer"/>
+                </attributeTypes>
+            </property>
+            <property key="nodeShape" type="attribute" required="false" dataSource="nodes">
+                <caption>Node shape</caption>
+                <description>allowed values "ellipse", "rect", "image"</description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
+            <property key="nodeWidth" type="attribute" required="false" dataSource="nodes">
+                <caption>Node width</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="Integer"/>
+                </attributeTypes>
+            </property>
+            <property key="nodeHeight" type="attribute" required="false" dataSource="nodes">
+                <caption>Node height</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="Integer"/>
+                </attributeTypes>
+            </property>
+            <property key="nodeStyle" type="attribute" required="false" dataSource="nodes">
+                <caption>Node style</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="String"/>
                 </attributeTypes>
             </property>
             <property key="nodeClick" type="action" dataSource="nodes">
@@ -55,11 +83,11 @@
                     <attributeType name="String"/>
                 </attributeTypes>
             </property>
-            <property key="linkThickness" type="attribute" required="false" dataSource="links">
-                <caption>Link thickness</caption>
-                <description>Default value: 2</description>
+            <property key="linkStyle" type="attribute" required="false" dataSource="links">
+                <caption>Link style</caption>
+                <description></description>
                 <attributeTypes>
-                    <attributeType name="Integer"/>
+                    <attributeType name="String"/>
                 </attributeTypes>
             </property>
         </propertyGroup>
