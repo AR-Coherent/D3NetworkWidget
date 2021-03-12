@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "eae0295c8fa3f0ca3e06";
+/******/ 	var hotCurrentHash = "d06617162a3337bf5dbc";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -31914,6 +31914,7 @@ var ReactDDDjs = /*#__PURE__*/function (_Component) {
           nodeWidth: this.props.nodeWidth,
           nodeHeight: this.props.nodeHeight,
           nodeStyle: this.props.nodeStyle,
+          nodeImgUrl: this.props.nodeImgUrl,
           nodeClick: this.props.nodeClick,
           links: this.props.links,
           linkSourceID: this.props.linkSourceID,
@@ -31990,7 +31991,7 @@ function Network(props) {
         return "none";
       }
     }).attr("class", "".concat(props.widgetName, "-node")).call(d3__WEBPACK_IMPORTED_MODULE_1__["drag"]().on("start", dragStarted).on("drag", dragged).on("end", dragEnded));
-    var nodeCircleContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodes")).selectAll('ellipse').data(nodesList).enter().append("ellipse").attr("href", "https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png").attr("rx", function (d) {
+    var nodeCircleContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodes")).selectAll('ellipse').data(nodesList).enter().append("ellipse").attr("rx", function (d) {
       return d.width;
     }).attr("ry", function (d) {
       return d.height;
@@ -32001,7 +32002,9 @@ function Network(props) {
         return "none";
       }
     }).attr("class", "".concat(props.widgetName, "-node")).call(d3__WEBPACK_IMPORTED_MODULE_1__["drag"]().on("start", dragStarted).on("drag", dragged).on("end", dragEnded));
-    var nodeImageContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodes")).selectAll('image').data(nodesList).enter().append("image").attr("href", "https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png").attr("width", function (d) {
+    var nodeImageContainer = g.append("g").attr("class", "".concat(props.widgetName, "-nodes")).selectAll('image').data(nodesList).enter().append("image").attr("href", function (d) {
+      return d.imgUrl;
+    }).attr("width", function (d) {
       return d.width;
     }).attr("height", function (d) {
       return d.height;
@@ -32096,6 +32099,7 @@ function Network(props) {
       nodeObj.width = getNodeWidth(node);
       nodeObj.height = getNodeHeight(node);
       nodeObj.style = getNodeStyle(node);
+      nodeObj.imgUrl = getNodeImgUrl(node);
       nodes.push(nodeObj);
     });
     return nodes;
@@ -32162,6 +32166,14 @@ function Network(props) {
   function getNodeStyle(node) {
     if (props.nodeStyle && props.nodeStyle(node).displayValue) {
       return props.nodeStyle(node).displayValue;
+    } else {
+      return '';
+    }
+  }
+
+  function getNodeImgUrl(node) {
+    if (props.nodeImgUrl && props.nodeImgUrl(node).displayValue) {
+      return props.nodeImgUrl(node).displayValue;
     } else {
       return '';
     }

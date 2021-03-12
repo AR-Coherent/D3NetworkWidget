@@ -61,6 +61,13 @@
                     <attributeType name="String"/>
                 </attributeTypes>
             </property>
+            <property key="nodeImgUrl" type="attribute" required="false" dataSource="nodes">
+                <caption>Node image url</caption>
+                <description></description>
+                <attributeTypes>
+                    <attributeType name="String"/>
+                </attributeTypes>
+            </property>
             <property key="nodeClick" type="action" dataSource="nodes">
                 <caption>On node click</caption>
                 <description>Action to be performed when node is clicked</description>

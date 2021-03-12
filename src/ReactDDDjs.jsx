@@ -15,6 +15,7 @@ export default class ReactDDDjs extends Component {
                         nodeWidth={this.props.nodeWidth}
                         nodeHeight={this.props.nodeHeight}
                         nodeStyle={this.props.nodeStyle}
+                        nodeImgUrl={this.props.nodeImgUrl}
                         nodeClick={this.props.nodeClick}
                         links={this.props.links}
                         linkSourceID={this.props.linkSourceID}

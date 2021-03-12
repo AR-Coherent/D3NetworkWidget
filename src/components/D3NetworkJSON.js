@@ -82,7 +82,6 @@ function Network(props) {
     .data(nodesList)
     .enter()
     .append("ellipse")
-    .attr("href", "https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png")
     .attr("rx", d => d.width)
     .attr("ry", d => d.height)
     .attr("style", d => d.style)
@@ -106,7 +105,7 @@ function Network(props) {
     .data(nodesList)
     .enter()
     .append("image")
-    .attr("href", "https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png")
+    .attr("href", d => d.imgUrl)
     .attr("width", d => d.width)
     .attr("height", d => d.height)
     .attr("display", d => {
@@ -204,6 +203,7 @@ function Network(props) {
       nodeObj.width = getNodeWidth(node);
       nodeObj.height = getNodeHeight(node);
       nodeObj.style = getNodeStyle(node);
+      nodeObj.imgUrl =getNodeImgUrl(node);
       nodes.push(nodeObj);
     })
     return nodes;
@@ -263,6 +263,14 @@ function Network(props) {
   function getNodeStyle(node){
     if (props.nodeStyle && props.nodeStyle(node).displayValue ){
       return props.nodeStyle(node).displayValue;
+    }else{
+      return '';
+    }
+  }
+
+  function getNodeImgUrl(node){
+    if (props.nodeImgUrl && props.nodeImgUrl(node).displayValue ){
+      return props.nodeImgUrl(node).displayValue;
     }else{
       return '';
     }
