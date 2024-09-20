@@ -194,10 +194,6 @@ function Network(props) {
 
   function setNodesState (nodesdata){
     let nodes = [];
-    console.log("This is my node:");
-    console.log(nodesdata);
-    console.log("This is my props yep:");
-    console.log(props);
     nodesdata.forEach(node => {
       let nodeObj = {}
       nodeObj.ID = getObject(props, 'nodeID', node).value;
@@ -239,57 +235,63 @@ function Network(props) {
   }
 
   function getNodeRepulsion(node){
-    
-    if (props.nodeRepulsion && getObject(props, 'nodeRepulsion', node).displayValue){
-      return getObject(props, 'nodeRepulsion', node).displayValue;
+    let obj;
+    if (props.nodeRepulsion && (obj = getObject(props, 'nodeRepulsion', node)) && obj.displayValue){
+      return obj.displayValue;
     }else{
       return 5;
     }
   }
 
   function getNodeShape(node){
-    if (props.nodeShape && getObject(props, 'nodeShape', node).displayValue){
-      return getObject(props, 'nodeShape', node).displayValue;
+    let obj;
+    if (props.nodeShape && (obj = getObject(props, 'nodeShape', node)) && obj.displayValue){
+      return obj.displayValue;
     }else{
       return 'rect';
     }
   }
 
   function getNodeWidth(node){
-    if (props.nodeWidth && getObject(props, 'nodeWidth', node).displayValue && getObject(props, 'nodeWidth', node).displayValue != '' && getObject(props, 'nodeWidth', node).displayValue != 0){
-      return getObject(props, 'nodeWidth', node).displayValue;
+    let obj;
+    if (props.nodeWidth && (obj = getObject(props, 'nodeWidth', node)) && obj.displayValue && obj.displayValue != '' && obj.displayValue != 0){
+      return obj.displayValue;
     }else{
       return '10';
     }
   }
 
   function getNodeHeight(node){
-    if (props.nodeHeight && getObject(props, 'nodeHeight', node).displayValue && getObject(props, 'nodeHeight', node).displayValue != '' && getObject(props, 'nodeHeight', node).displayValue != 0){
-      return getObject(props, 'nodeHeight', node).displayValue;
+    let obj;
+    if (props.nodeHeight && (obj = getObject(props, 'nodeHeight', node)) && obj.displayValue && obj.displayValue != '' && obj.displayValue != 0){
+      return obj.displayValue;
     }else{
       return '10';
     }
   }
 
   function getNodeStyle(node){
-    if (props.nodeStyle && getObject(props, 'nodeStyle', node).displayValue ){
-      return getObject(props, 'nodeStyle', node).displayValue;
+    let obj;
+    if (props.nodeStyle && (obj = getObject(props, 'nodeStyle', node)) && obj.displayValue ){
+      return obj.displayValue;
     }else{
       return '';
     }
   }
 
   function getNodeImgUrl(node){
-    if (props.nodeImgUrl && getObject(props, 'nodeImgUrl', node).displayValue ){
-      return getObject(props, 'nodeImgUrl', node).displayValue;
+    let obj;
+    if (props.nodeImgUrl && (obj = getObject(props, 'nodeImgUrl', node)) && obj.displayValue ){
+      return obj.displayValue;
     }else{
       return '';
     }
   }
 
   function getLinkStyle(link){
-    if (props.linkStyle && getObject(props, 'linkStyle', link).value && getObject(props, 'linkStyle', link).value != ''){
-      return getObject(props, 'linkStyle', link).value
+    let obj;
+    if (props.linkStyle && (obj = getObject(props, 'linkStyle', link)) && obj.value && obj.value != ''){
+      return obj.value
     }else{
       return "stroke:gray;stroke-width:2";
     }
