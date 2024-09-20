@@ -194,16 +194,20 @@ function Network(props) {
 
   function setNodesState (nodesdata){
     let nodes = [];
+    console.log("This is my node:");
+    console.log(nodesdata);
+    console.log("This is my props yep:");
+    console.log(props);
     nodesdata.forEach(node => {
       let nodeObj = {}
-      nodeObj.ID = props.nodeID(node).value;
-      nodeObj.name = props.nodeName(node).value;
+      nodeObj.ID = getObject(props, 'nodeID', node).value;
+      nodeObj.name = getObject(props, 'nodeName', node).value;
       nodeObj.repulsion = getNodeRepulsion(node);
       nodeObj.shape = getNodeShape(node);
       nodeObj.width = getNodeWidth(node);
       nodeObj.height = getNodeHeight(node);
       nodeObj.style = getNodeStyle(node);
-      nodeObj.imgUrl =getNodeImgUrl(node);
+      nodeObj.imgUrl = getNodeImgUrl(node);
       nodes.push(nodeObj);
     })
     return nodes;
@@ -212,13 +216,13 @@ function Network(props) {
   function setLinksState (linksdata, nodesList){
     let links = [];
     linksdata.forEach(link => {
-      if(nodesList.some(node => node.ID === props.linkSourceID(link).value) && 
-      nodesList.some(node => node.ID === props.linkTargetID(link).value)){
-        let repulsionSource = nodesList.filter(node => { return node.ID === props.linkSourceID(link).value})[0].repulsion;
-        let repulsionTarget = nodesList.filter(node => { return node.ID === props.linkTargetID(link).value})[0].repulsion;
+      if(nodesList.some(node => node.ID === props.linkSourceID.get(link).value) && 
+      nodesList.some(node => node.ID === props.linkTargetID.get(link).value)){
+        let repulsionSource = nodesList.filter(node => { return node.ID === props.linkSourceID.get(link).value})[0].repulsion;
+        let repulsionTarget = nodesList.filter(node => { return node.ID === props.linkTargetID.get(link).value})[0].repulsion;
         let linkObj = {
-            "source": props.linkSourceID(link).value,
-            "target": props.linkTargetID(link).value,
+            "source": props.linkSourceID.get(link).value,
+            "target": props.linkTargetID.get(link).value,
             "style": getLinkStyle(link),
             "biggestNode": Math.max(repulsionSource, repulsionTarget)
            }
@@ -228,57 +232,64 @@ function Network(props) {
     return links;
   }
 
+  function getObject(object, functionName, ...args){
+    return (object[functionName]?.constructor === Function) 
+    ? object[functionName](...args) 
+    : object[functionName].get(...args);
+  }
+
   function getNodeRepulsion(node){
-    if (props.nodeRepulsion && props.nodeRepulsion(node).displayValue){
-      return props.nodeRepulsion(node).displayValue;
+    
+    if (props.nodeRepulsion && getObject(props, 'nodeRepulsion', node).displayValue){
+      return getObject(props, 'nodeRepulsion', node).displayValue;
     }else{
       return 5;
     }
   }
 
   function getNodeShape(node){
-    if (props.nodeShape && props.nodeShape(node).displayValue){
-      return props.nodeShape(node).displayValue;
+    if (props.nodeShape && getObject(props, 'nodeShape', node).displayValue){
+      return getObject(props, 'nodeShape', node).displayValue;
     }else{
       return 'rect';
     }
   }
 
   function getNodeWidth(node){
-    if (props.nodeWidth && props.nodeWidth(node).displayValue && props.nodeWidth(node).displayValue != ''){
-      return props.nodeWidth(node).displayValue;
+    if (props.nodeWidth && getObject(props, 'nodeWidth', node).displayValue && getObject(props, 'nodeWidth', node).displayValue != '' && getObject(props, 'nodeWidth', node).displayValue != 0){
+      return getObject(props, 'nodeWidth', node).displayValue;
     }else{
       return '10';
     }
   }
 
   function getNodeHeight(node){
-    if (props.nodeHeight && props.nodeHeight(node).displayValue && props.nodeHeight(node).displayValue != ''){
-      return props.nodeHeight(node).displayValue;
+    if (props.nodeHeight && getObject(props, 'nodeHeight', node).displayValue && getObject(props, 'nodeHeight', node).displayValue != '' && getObject(props, 'nodeHeight', node).displayValue != 0){
+      return getObject(props, 'nodeHeight', node).displayValue;
     }else{
       return '10';
     }
   }
 
   function getNodeStyle(node){
-    if (props.nodeStyle && props.nodeStyle(node).displayValue ){
-      return props.nodeStyle(node).displayValue;
+    if (props.nodeStyle && getObject(props, 'nodeStyle', node).displayValue ){
+      return getObject(props, 'nodeStyle', node).displayValue;
     }else{
       return '';
     }
   }
 
   function getNodeImgUrl(node){
-    if (props.nodeImgUrl && props.nodeImgUrl(node).displayValue ){
-      return props.nodeImgUrl(node).displayValue;
+    if (props.nodeImgUrl && getObject(props, 'nodeImgUrl', node).displayValue ){
+      return getObject(props, 'nodeImgUrl', node).displayValue;
     }else{
       return '';
     }
   }
 
   function getLinkStyle(link){
-    if (props.linkStyle && props.linkStyle(link).value && props.linkStyle(link).value != ''){
-      return props.linkStyle(link).value
+    if (props.linkStyle && getObject(props, 'linkStyle', link).value && getObject(props, 'linkStyle', link).value != ''){
+      return getObject(props, 'linkStyle', link).value
     }else{
       return "stroke:gray;stroke-width:2";
     }
